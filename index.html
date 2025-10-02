@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Criador de Avatar - Ordem Paranormal</title>
+  <title>Avatar - Ordem Paranormal</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
     body {
-      background: radial-gradient(circle at top, #080808 0%, #0d0d0d 50%, #000 100%);
-      color: #e0d9ff;
+      background: radial-gradient(circle at top, #050505 0%, #0d0d0d 60%, #000 100%);
+      color: #bfa9ff;
       font-family: 'Poppins', sans-serif;
       display: flex;
       flex-direction: column;
@@ -17,161 +17,24 @@
       justify-content: center;
       height: 100vh;
       overflow: hidden;
-      position: relative;
-    }
-
-    /* Névoa mística animada */
-    body::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: url('https://i.imgur.com/1vF5FqR.png');
-      opacity: 0.08;
-      animation: moverNévoa 30s linear infinite;
-      z-index: 0;
-    }
-
-    @keyframes moverNévoa {
-      from { background-position: 0 0; }
-      to { background-position: 1000px 1000px; }
     }
 
     h1 {
       margin-bottom: 20px;
-      color: #b78aff;
-      text-shadow: 0 0 15px #6a3bff;
-      z-index: 1;
+      text-shadow: 0 0 10px #6a3bff;
     }
 
-    .avatar-container {
-      width: 230px;
-      height: 330px;
-      position: relative;
+    canvas {
       background: #111;
-      border: 2px solid #3b3b3b;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 30px #000 inset, 0 0 20px #6a3bff33;
-      z-index: 1;
-      overflow: hidden;
-    }
-
-    .avatar-view {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      transition: opacity 0.5s ease;
-      opacity: 0;
-    }
-
-    .avatar-view.active {
-      display: flex;
-      opacity: 1;
-    }
-
-    /* Corpo do personagem */
-    .personagem {
-      position: relative;
-      width: 70px;
-      height: 160px;
-      animation: flutuar 3s ease-in-out infinite;
-    }
-
-    @keyframes flutuar {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
-    }
-
-    .cabeca {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(#2b2b2b, #1a1a1a);
-      border-radius: 50%;
-      margin: 0 auto;
-      position: relative;
-      box-shadow: 0 0 10px #000 inset, 0 0 10px #3a3a3a77;
-    }
-
-    .olho {
-      position: absolute;
-      top: 22px;
-      width: 10px;
-      height: 10px;
-      background: #b78aff;
-      border-radius: 50%;
-      box-shadow: 0 0 8px #b78aff;
-      animation: brilhar 2s ease-in-out infinite;
-    }
-
-    .olho.esq { left: 13px; }
-    .olho.dir { right: 13px; }
-
-    @keyframes brilhar {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-
-    .corpo {
-      width: 50px;
-      height: 80px;
-      background: linear-gradient(to bottom, #1a1a1a, #000);
-      margin: 5px auto;
-      border-radius: 10px;
-      position: relative;
-      box-shadow: 0 0 10px #000 inset;
-    }
-
-    .capuz {
-      position: absolute;
-      top: -20px;
-      left: -5px;
-      width: 60px;
-      height: 40px;
-      background: #0a0a0a;
-      border-radius: 50% 50% 0 0;
-      box-shadow: 0 0 10px #000 inset;
-      z-index: -1;
-    }
-
-    .simbolo {
-      width: 20px;
-      height: 20px;
-      border: 2px solid #b78aff;
-      border-radius: 50%;
-      position: absolute;
-      top: 25px;
-      left: 50%;
-      transform: translateX(-50%);
-      box-shadow: 0 0 15px #b78aff77;
-      animation: pulsar 3s ease-in-out infinite;
-    }
-
-    @keyframes pulsar {
-      0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
-      50% { transform: translateX(-50%) scale(1.2); opacity: 0.7; }
-    }
-
-    .pernas {
-      width: 12px;
-      height: 45px;
-      background: #111;
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      box-shadow: -14px 0 0 #111, 14px 0 0 #111;
+      border: 2px solid #333;
+      border-radius: 16px;
+      box-shadow: 0 0 25px #000 inset, 0 0 15px #6a3bff33;
     }
 
     .botoes {
       margin-top: 20px;
       display: flex;
-      gap: 12px;
-      z-index: 1;
+      gap: 10px;
     }
 
     button {
@@ -189,74 +52,124 @@
       background: #2a2a2a;
       box-shadow: 0 0 10px #b78aff55;
     }
-
   </style>
 </head>
 <body>
-  <h1>Criador de Avatar - Ordem Paranormal</h1>
-
-  <div class="avatar-container">
-    <!-- Frente -->
-    <div class="avatar-view active" id="frente">
-      <div class="personagem">
-        <div class="cabeca">
-          <div class="olho esq"></div>
-          <div class="olho dir"></div>
-        </div>
-        <div class="corpo">
-          <div class="capuz"></div>
-          <div class="simbolo"></div>
-        </div>
-        <div class="pernas"></div>
-      </div>
-    </div>
-
-    <!-- Costas -->
-    <div class="avatar-view" id="costas">
-      <div class="personagem">
-        <div class="cabeca"></div>
-        <div class="corpo">
-          <div class="capuz"></div>
-        </div>
-        <div class="pernas"></div>
-      </div>
-    </div>
-
-    <!-- Lado Esquerdo -->
-    <div class="avatar-view" id="lado-esq">
-      <div class="personagem">
-        <div class="cabeca"></div>
-        <div class="corpo">
-          <div class="simbolo" style="left: 35%;"></div>
-        </div>
-        <div class="pernas"></div>
-      </div>
-    </div>
-
-    <!-- Lado Direito -->
-    <div class="avatar-view" id="lado-dir">
-      <div class="personagem">
-        <div class="cabeca"></div>
-        <div class="corpo">
-          <div class="simbolo" style="left: 65%;"></div>
-        </div>
-        <div class="pernas"></div>
-      </div>
-    </div>
-  </div>
+  <h1>Avatar - Ordem Paranormal</h1>
+  <canvas id="avatarCanvas" width="250" height="350"></canvas>
 
   <div class="botoes">
-    <button onclick="mostrar('frente')">Frente</button>
-    <button onclick="mostrar('costas')">Costas</button>
-    <button onclick="mostrar('lado-esq')">Lado Esquerdo</button>
-    <button onclick="mostrar('lado-dir')">Lado Direito</button>
+    <button onclick="drawAvatar('front')">Frente</button>
+    <button onclick="drawAvatar('back')">Costas</button>
+    <button onclick="drawAvatar('left')">Lado Esquerdo</button>
+    <button onclick="drawAvatar('right')">Lado Direito</button>
   </div>
 
   <script>
-    function mostrar(vista) {
-      document.querySelectorAll('.avatar-view').forEach(v => v.classList.remove('active'));
-      document.getElementById(vista).classList.add('active');
+    const canvas = document.getElementById('avatarCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function drawSymbol(x, y) {
+      ctx.beginPath();
+      ctx.strokeStyle = '#b78aff';
+      ctx.lineWidth = 2;
+      ctx.arc(x, y, 10, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(x - 6, y);
+      ctx.lineTo(x + 6, y);
+      ctx.moveTo(x, y - 6);
+      ctx.lineTo(x, y + 6);
+      ctx.stroke();
     }
+
+    function drawAvatar(view) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Sombra geral
+      ctx.shadowColor = '#000';
+      ctx.shadowBlur = 15;
+
+      const centerX = canvas.width / 2;
+      const baseY = 300;
+
+      // Corpo (tronco)
+      ctx.fillStyle = '#1a1a1a';
+      ctx.fillRect(centerX - 25, baseY - 100, 50, 80);
+
+      // Capuz
+      ctx.beginPath();
+      ctx.moveTo(centerX - 35, baseY - 100);
+      ctx.lineTo(centerX, baseY - 150);
+      ctx.lineTo(centerX + 35, baseY - 100);
+      ctx.closePath();
+      ctx.fillStyle = '#0a0a0a';
+      ctx.fill();
+
+      // Cabeça
+      ctx.beginPath();
+      ctx.arc(centerX, baseY - 120, 20, 0, Math.PI * 2);
+      ctx.fillStyle = '#2e2e2e';
+      ctx.fill();
+
+      // Olhos (somente frente e lado)
+      if (view === 'front') {
+        ctx.fillStyle = '#b78aff';
+        ctx.shadowColor = '#b78aff';
+        ctx.shadowBlur = 15;
+        ctx.beginPath();
+        ctx.arc(centerX - 8, baseY - 120, 4, 0, Math.PI * 2);
+        ctx.arc(centerX + 8, baseY - 120, 4, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (view === 'left') {
+        ctx.fillStyle = '#b78aff';
+        ctx.shadowColor = '#b78aff';
+        ctx.beginPath();
+        ctx.arc(centerX - 10, baseY - 120, 4, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (view === 'right') {
+        ctx.fillStyle = '#b78aff';
+        ctx.shadowColor = '#b78aff';
+        ctx.beginPath();
+        ctx.arc(centerX + 10, baseY - 120, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Símbolo arcano (frente e lados)
+      if (view !== 'back') {
+        drawSymbol(centerX, baseY - 70);
+      }
+
+      // Pernas
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = '#111';
+      ctx.fillRect(centerX - 18, baseY - 20, 10, 40);
+      ctx.fillRect(centerX + 8, baseY - 20, 10, 40);
+
+      // Botas
+      ctx.fillStyle = '#222';
+      ctx.fillRect(centerX - 20, baseY + 20, 14, 5);
+      ctx.fillRect(centerX + 6, baseY + 20, 14, 5);
+
+      // Braços (variam conforme vista)
+      ctx.fillStyle = '#1a1a1a';
+      if (view === 'front' || view === 'back') {
+        ctx.fillRect(centerX - 45, baseY - 95, 15, 60);
+        ctx.fillRect(centerX + 30, baseY - 95, 15, 60);
+      } else if (view === 'left') {
+        ctx.fillRect(centerX - 50, baseY - 95, 12, 60);
+      } else if (view === 'right') {
+        ctx.fillRect(centerX + 38, baseY - 95, 12, 60);
+      }
+
+      // Ajustar sombra final
+      ctx.shadowBlur = 0;
+    }
+
+    // Desenha o avatar inicial
+    drawAvatar('front');
   </script>
 </body>
 </html>
+
