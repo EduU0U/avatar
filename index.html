@@ -2,162 +2,118 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Avatar Chibi 3D Base</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avatar 3D Chibi</title>
   <style>
     body {
       margin: 0;
-      height: 100vh;
-      background: radial-gradient(circle at center, #1a1a1a, #000);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-family: sans-serif;
-    }
-    h1 {
-      margin-bottom: 20px;
-      text-shadow: 0 0 12px #8257e5;
+      overflow: hidden;
+      background: linear-gradient(180deg, #2a2a2a, #0a0a0a);
     }
     canvas {
-      border-radius: 16px;
-      box-shadow: 0 0 25px #000, 0 0 25px #6a3bff55 inset;
-      background: #f5d9d0;
-    }
-    .controls {
-      margin-top: 20px;
-    }
-    button {
-      margin: 0 5px;
-      padding: 8px 14px;
-      background: #222;
-      border: 1px solid #444;
-      border-radius: 8px;
-      color: #b78aff;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #333;
+      display: block;
     }
   </style>
 </head>
 <body>
-  <h1>Avatar Chibi 3D Base</h1>
-  <canvas id="avatar" width="400" height="500"></canvas>
-  <div class="controls">
-    <button onclick="setView('front')">Frente</button>
-    <button onclick="setView('left')">Esquerda</button>
-    <button onclick="setView('right')">Direita</button>
-    <button onclick="setView('back')">Costas</button>
-  </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
   <script>
-    const canvas = document.getElementById("avatar");
-    const ctx = canvas.getContext("2d");
-    let view = 'front';
+    // Cena, câmera e renderizador
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    document.body.appendChild(renderer.domElement);
 
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Luzes
+    const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+    scene.add(ambient);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+    dirLight.position.set(3, 5, 3);
+    dirLight.castShadow = true;
+    scene.add(dirLight);
 
-      if (view === 'front') drawFront();
-      if (view === 'left') drawLeft();
-      if (view === 'right') drawRight();
-      if (view === 'back') drawBack();
+    // Cabeça (esfera com subdivisões + material toon)
+    const headGeo = new THREE.SphereGeometry(1.3, 32, 32);
+    const headMat = new THREE.MeshStandardMaterial({
+      color: 0xffd6b4,
+      roughness: 0.4,
+      metalness: 0.1
+    });
+    const head = new THREE.Mesh(headGeo, headMat);
+    head.position.y = 1.6;
+    scene.add(head);
+
+    // Wireframe da cabeça (linhas da malha)
+    const headWire = new THREE.LineSegments(
+      new THREE.WireframeGeometry(headGeo),
+      new THREE.LineBasicMaterial({ color: 0x884400, transparent: true, opacity: 0.3 })
+    );
+    head.add(headWire);
+
+    // Corpo (cilindro achatado estilo chibi)
+    const bodyGeo = new THREE.CapsuleGeometry(0.6, 1.2, 16, 16);
+    const bodyMat = new THREE.MeshStandardMaterial({ color: 0xffd6b4 });
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    body.position.y = 0.2;
+    scene.add(body);
+
+    // Braços
+    const armGeo = new THREE.CapsuleGeometry(0.2, 0.7, 8, 8);
+    const armL = new THREE.Mesh(armGeo, bodyMat);
+    armL.position.set(-0.8, 0.5, 0);
+    const armR = armL.clone();
+    armR.position.x = 0.8;
+    scene.add(armL, armR);
+
+    // Pernas
+    const legGeo = new THREE.CapsuleGeometry(0.25, 0.9, 8, 8);
+    const legL = new THREE.Mesh(legGeo, bodyMat);
+    const legR = legL.clone();
+    legL.position.set(-0.3, -1.1, 0);
+    legR.position.set(0.3, -1.1, 0);
+    scene.add(legL, legR);
+
+    // Olhos (esferas pequenas com brilho)
+    const eyeGeo = new THREE.SphereGeometry(0.15, 16, 16);
+    const eyeMat = new THREE.MeshStandardMaterial({ color: 0x442200, emissive: 0x331100 });
+    const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
+    const eyeR = eyeL.clone();
+    eyeL.position.set(-0.35, 1.6, 1.1);
+    eyeR.position.set(0.35, 1.6, 1.1);
+    scene.add(eyeL, eyeR);
+
+    // Chão
+    const plane = new THREE.Mesh(
+      new THREE.PlaneGeometry(10, 10),
+      new THREE.MeshStandardMaterial({ color: 0x222222 })
+    );
+    plane.rotation.x = -Math.PI / 2;
+    plane.receiveShadow = true;
+    scene.add(plane);
+
+    // Câmera e controles
+    camera.position.set(0, 2, 6);
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    // Animação
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
     }
+    animate();
 
-    // Função para desenhar sombreamento radial (sensação 3D)
-    function shadedCircle(x, y, r, lightX, lightY, baseColor) {
-      const gradient = ctx.createRadialGradient(lightX, lightY, r * 0.2, x, y, r);
-      gradient.addColorStop(0, "#fff5");
-      gradient.addColorStop(1, baseColor);
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    function drawFront() {
-      // Cabeça
-      shadedCircle(200, 180, 100, 160, 120, "#f2c4b3");
-
-      // Guias 3D
-      ctx.strokeStyle = "#dba59a";
-      ctx.lineWidth = 1;
-      // Linha central vertical
-      ctx.beginPath();
-      ctx.moveTo(200, 80);
-      ctx.lineTo(200, 280);
-      ctx.stroke();
-      // Linha horizontal dos olhos
-      ctx.beginPath();
-      ctx.arc(200, 180, 60, 0, Math.PI * 2);
-      ctx.stroke();
-
-      // Olhos
-      drawEye(160, 180);
-      drawEye(240, 180);
-
-      // Corpo
-      shadedCircle(200, 340, 60, 160, 300, "#f2c4b3");
-
-      // Braços
-      shadedCircle(120, 340, 25, 100, 320, "#f2c4b3");
-      shadedCircle(280, 340, 25, 260, 320, "#f2c4b3");
-
-      // Pernas
-      shadedCircle(170, 440, 25, 160, 420, "#f2c4b3");
-      shadedCircle(230, 440, 25, 220, 420, "#f2c4b3");
-    }
-
-    function drawEye(x, y) {
-      const grad = ctx.createRadialGradient(x, y, 2, x, y, 10);
-      grad.addColorStop(0, "#ffda79");
-      grad.addColorStop(0.5, "#f28c28");
-      grad.addColorStop(1, "#2a1a0a");
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.ellipse(x, y, 12, 16, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Brilho
-      ctx.fillStyle = "#fff8";
-      ctx.beginPath();
-      ctx.arc(x - 4, y - 6, 4, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    function drawLeft() {
-      shadedCircle(200, 180, 100, 150, 130, "#f2c4b3");
-      // Uma orelha visível
-      shadedCircle(110, 180, 20, 100, 170, "#f2c4b3");
-      // Um olho visível
-      drawEye(160, 180);
-    }
-
-    function drawRight() {
-      shadedCircle(200, 180, 100, 250, 130, "#f2c4b3");
-      shadedCircle(290, 180, 20, 280, 170, "#f2c4b3");
-      drawEye(240, 180);
-    }
-
-    function drawBack() {
-      shadedCircle(200, 180, 100, 220, 140, "#f2c4b3");
-      // Linha central
-      ctx.strokeStyle = "#dba59a";
-      ctx.beginPath();
-      ctx.moveTo(200, 80);
-      ctx.lineTo(200, 280);
-      ctx.stroke();
-    }
-
-    function setView(v) {
-      view = v;
-      draw();
-    }
-
-    draw();
+    // Ajustar tela
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
   </script>
 </body>
 </html>
+
