@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Avatar - Ordem Paranormal</title>
+  <title>Avatar Detalhado - Ordem Paranormal</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
     body {
-      background: radial-gradient(circle at top, #050505 0%, #0d0d0d 60%, #000 100%);
-      color: #bfa9ff;
+      background: radial-gradient(circle at top, #0a0a0a 0%, #1a1a1a 60%, #000 100%);
+      color: #c5b3ff;
       font-family: 'Poppins', sans-serif;
       display: flex;
       flex-direction: column;
@@ -21,20 +21,21 @@
 
     h1 {
       margin-bottom: 20px;
-      text-shadow: 0 0 10px #6a3bff;
+      text-shadow: 0 0 12px #8257e5;
     }
 
-    canvas {
-      background: #111;
-      border: 2px solid #333;
+    svg {
+      width: 250px;
+      height: 350px;
       border-radius: 16px;
-      box-shadow: 0 0 25px #000 inset, 0 0 15px #6a3bff33;
+      box-shadow: 0 0 20px #000 inset, 0 0 15px #6a3bff55;
+      background: linear-gradient(#111, #000);
     }
 
     .botoes {
       margin-top: 20px;
       display: flex;
-      gap: 10px;
+      gap: 12px;
     }
 
     button {
@@ -56,120 +57,87 @@
 </head>
 <body>
   <h1>Avatar - Ordem Paranormal</h1>
-  <canvas id="avatarCanvas" width="250" height="350"></canvas>
+
+  <!-- Contêiner SVG -->
+  <svg id="avatarSVG" viewBox="0 0 250 350">
+    <!-- Frente -->
+    <g id="view-front">
+      <!-- Capuz -->
+      <path d="M125 60 C85 100, 85 180, 125 200 C165 180, 165 100, 125 60Z" fill="#0d0d0d" stroke="#222" stroke-width="2"/>
+      <!-- Rosto -->
+      <ellipse cx="125" cy="110" rx="22" ry="26" fill="#2e2e2e" />
+      <!-- Olhos -->
+      <ellipse cx="115" cy="110" rx="5" ry="6" fill="#b78aff">
+        <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="135" cy="110" rx="5" ry="6" fill="#b78aff">
+        <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite"/>
+      </ellipse>
+      <!-- Corpo -->
+      <rect x="100" y="135" width="50" height="90" rx="10" fill="#1a1a1a" />
+      <!-- Sobretudo -->
+      <path d="M100 135 L90 260 L160 260 L150 135 Z" fill="#101010" />
+      <!-- Símbolo arcano -->
+      <circle cx="125" cy="170" r="10" stroke="#b78aff" stroke-width="2" fill="none">
+        <animateTransform attributeName="transform" type="rotate" from="0 125 170" to="360 125 170" dur="6s" repeatCount="indefinite" />
+      </circle>
+      <line x1="115" y1="170" x2="135" y2="170" stroke="#b78aff" stroke-width="1.5" />
+      <line x1="125" y1="160" x2="125" y2="180" stroke="#b78aff" stroke-width="1.5" />
+      <!-- Pernas -->
+      <rect x="108" y="225" width="10" height="45" fill="#111" />
+      <rect x="132" y="225" width="10" height="45" fill="#111" />
+    </g>
+
+    <!-- Costas -->
+    <g id="view-back" style="display:none;">
+      <path d="M125 60 C85 100, 85 180, 125 200 C165 180, 165 100, 125 60Z" fill="#0d0d0d" stroke="#222" stroke-width="2"/>
+      <rect x="100" y="135" width="50" height="90" rx="10" fill="#1a1a1a" />
+      <path d="M100 135 L90 260 L160 260 L150 135 Z" fill="#101010" />
+      <rect x="108" y="225" width="10" height="45" fill="#111" />
+      <rect x="132" y="225" width="10" height="45" fill="#111" />
+    </g>
+
+    <!-- Lado Esquerdo -->
+    <g id="view-left" style="display:none;">
+      <path d="M130 60 C110 100, 110 180, 130 200 C150 180, 150 100, 130 60Z" fill="#0d0d0d" stroke="#222" stroke-width="2"/>
+      <ellipse cx="130" cy="110" rx="20" ry="26" fill="#2e2e2e" />
+      <ellipse cx="118" cy="110" rx="5" ry="6" fill="#b78aff">
+        <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite"/>
+      </ellipse>
+      <rect x="115" y="135" width="40" height="90" rx="10" fill="#1a1a1a" />
+      <circle cx="130" cy="170" r="9" stroke="#b78aff" stroke-width="2" fill="none" />
+      <rect x="120" y="225" width="10" height="45" fill="#111" />
+    </g>
+
+    <!-- Lado Direito -->
+    <g id="view-right" style="display:none;">
+      <path d="M120 60 C140 100, 140 180, 120 200 C100 180, 100 100, 120 60Z" fill="#0d0d0d" stroke="#222" stroke-width="2"/>
+      <ellipse cx="120" cy="110" rx="20" ry="26" fill="#2e2e2e" />
+      <ellipse cx="132" cy="110" rx="5" ry="6" fill="#b78aff">
+        <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite"/>
+      </ellipse>
+      <rect x="95" y="135" width="40" height="90" rx="10" fill="#1a1a1a" />
+      <circle cx="120" cy="170" r="9" stroke="#b78aff" stroke-width="2" fill="none" />
+      <rect x="110" y="225" width="10" height="45" fill="#111" />
+    </g>
+  </svg>
 
   <div class="botoes">
-    <button onclick="drawAvatar('front')">Frente</button>
-    <button onclick="drawAvatar('back')">Costas</button>
-    <button onclick="drawAvatar('left')">Lado Esquerdo</button>
-    <button onclick="drawAvatar('right')">Lado Direito</button>
+    <button onclick="showView('front')">Frente</button>
+    <button onclick="showView('back')">Costas</button>
+    <button onclick="showView('left')">Esquerda</button>
+    <button onclick="showView('right')">Direita</button>
   </div>
 
   <script>
-    const canvas = document.getElementById('avatarCanvas');
-    const ctx = canvas.getContext('2d');
-
-    function drawSymbol(x, y) {
-      ctx.beginPath();
-      ctx.strokeStyle = '#b78aff';
-      ctx.lineWidth = 2;
-      ctx.arc(x, y, 10, 0, Math.PI * 2);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(x - 6, y);
-      ctx.lineTo(x + 6, y);
-      ctx.moveTo(x, y - 6);
-      ctx.lineTo(x, y + 6);
-      ctx.stroke();
+    function showView(view) {
+      const views = ['front', 'back', 'left', 'right'];
+      views.forEach(v => {
+        document.getElementById(`view-${v}`).style.display = v === view ? 'block' : 'none';
+      });
     }
-
-    function drawAvatar(view) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Sombra geral
-      ctx.shadowColor = '#000';
-      ctx.shadowBlur = 15;
-
-      const centerX = canvas.width / 2;
-      const baseY = 300;
-
-      // Corpo (tronco)
-      ctx.fillStyle = '#1a1a1a';
-      ctx.fillRect(centerX - 25, baseY - 100, 50, 80);
-
-      // Capuz
-      ctx.beginPath();
-      ctx.moveTo(centerX - 35, baseY - 100);
-      ctx.lineTo(centerX, baseY - 150);
-      ctx.lineTo(centerX + 35, baseY - 100);
-      ctx.closePath();
-      ctx.fillStyle = '#0a0a0a';
-      ctx.fill();
-
-      // Cabeça
-      ctx.beginPath();
-      ctx.arc(centerX, baseY - 120, 20, 0, Math.PI * 2);
-      ctx.fillStyle = '#2e2e2e';
-      ctx.fill();
-
-      // Olhos (somente frente e lado)
-      if (view === 'front') {
-        ctx.fillStyle = '#b78aff';
-        ctx.shadowColor = '#b78aff';
-        ctx.shadowBlur = 15;
-        ctx.beginPath();
-        ctx.arc(centerX - 8, baseY - 120, 4, 0, Math.PI * 2);
-        ctx.arc(centerX + 8, baseY - 120, 4, 0, Math.PI * 2);
-        ctx.fill();
-      } else if (view === 'left') {
-        ctx.fillStyle = '#b78aff';
-        ctx.shadowColor = '#b78aff';
-        ctx.beginPath();
-        ctx.arc(centerX - 10, baseY - 120, 4, 0, Math.PI * 2);
-        ctx.fill();
-      } else if (view === 'right') {
-        ctx.fillStyle = '#b78aff';
-        ctx.shadowColor = '#b78aff';
-        ctx.beginPath();
-        ctx.arc(centerX + 10, baseY - 120, 4, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Símbolo arcano (frente e lados)
-      if (view !== 'back') {
-        drawSymbol(centerX, baseY - 70);
-      }
-
-      // Pernas
-      ctx.shadowBlur = 10;
-      ctx.fillStyle = '#111';
-      ctx.fillRect(centerX - 18, baseY - 20, 10, 40);
-      ctx.fillRect(centerX + 8, baseY - 20, 10, 40);
-
-      // Botas
-      ctx.fillStyle = '#222';
-      ctx.fillRect(centerX - 20, baseY + 20, 14, 5);
-      ctx.fillRect(centerX + 6, baseY + 20, 14, 5);
-
-      // Braços (variam conforme vista)
-      ctx.fillStyle = '#1a1a1a';
-      if (view === 'front' || view === 'back') {
-        ctx.fillRect(centerX - 45, baseY - 95, 15, 60);
-        ctx.fillRect(centerX + 30, baseY - 95, 15, 60);
-      } else if (view === 'left') {
-        ctx.fillRect(centerX - 50, baseY - 95, 12, 60);
-      } else if (view === 'right') {
-        ctx.fillRect(centerX + 38, baseY - 95, 12, 60);
-      }
-
-      // Ajustar sombra final
-      ctx.shadowBlur = 0;
-    }
-
-    // Desenha o avatar inicial
-    drawAvatar('front');
   </script>
 </body>
 </html>
+
 
