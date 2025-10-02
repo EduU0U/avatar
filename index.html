@@ -1,143 +1,461 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Avatar Detalhado - Ordem Paranormal</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Avatar 3D-ish — Ordem Paranormal</title>
+<style>
+  :root{
+    --bg1:#050406;
+    --bg2:#0d0d12;
+    --accent:#b78aff;
+    --muted:#cfc7ff;
+  }
+  html,body{
+    height:100%;
+    margin:0;
+    font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: radial-gradient(circle at 10% 10%, rgba(103,45,255,0.06), transparent 10%),
+                linear-gradient(180deg,var(--bg1),var(--bg2));
+    color:var(--muted);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:22px;
+    padding:22px;
+  }
 
-    body {
-      background: radial-gradient(circle at top, #0a0a0a 0%, #1a1a1a 60%, #000 100%);
-      color: #c5b3ff;
-      font-family: 'Poppins', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      overflow: hidden;
-    }
+  .panel{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    align-items:center;
+  }
 
-    h1 {
-      margin-bottom: 20px;
-      text-shadow: 0 0 12px #8257e5;
-    }
+  h1{
+    margin:0 0 6px 0;
+    color:var(--accent);
+    text-shadow:0 0 10px #6a3bff66;
+    font-size:18px;
+  }
 
-    svg {
-      width: 250px;
-      height: 350px;
-      border-radius: 16px;
-      box-shadow: 0 0 20px #000 inset, 0 0 15px #6a3bff55;
-      background: linear-gradient(#111, #000);
-    }
+  .canvas-wrap{
+    width:320px;
+    height:440px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));
+    border-radius:16px;
+    padding:12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+    display:grid;
+    place-items:center;
+    position:relative;
+  }
 
-    .botoes {
-      margin-top: 20px;
-      display: flex;
-      gap: 12px;
-    }
+  /* Container responsivo do SVG */
+  svg{
+    width:280px;
+    height:400px;
+    display:block;
+    user-select:none;
+    -webkit-user-select:none;
+    cursor:grab;
+  }
+  svg:active{ cursor:grabbing; }
 
-    button {
-      background: #1a1a1a;
-      color: #b78aff;
-      border: 1px solid #3b3b3b;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.2s;
-    }
+  .controls{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-top:6px;
+  }
 
-    button:hover {
-      background: #2a2a2a;
-      box-shadow: 0 0 10px #b78aff55;
-    }
-  </style>
+  .controls button, .controls input[type="range"]{
+    background:#121217;
+    color:var(--accent);
+    border:1px solid #2f2f36;
+    padding:8px 10px;
+    border-radius:8px;
+    font-weight:600;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+  }
+  .controls button:hover{ box-shadow:0 3px 12px #6a3bff22; transform:translateY(-2px); }
+  label{ font-size:12px; color:#bfb7ff; display:flex; align-items:center; gap:8px; }
+
+  .row{
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+
+  .small{
+    font-size:12px;
+    padding:6px 8px;
+  }
+
+  .footer-note{ font-size:12px; color:#9d96b6; margin-top:8px; text-align:center; max-width:320px; }
+
+</style>
 </head>
 <body>
-  <h1>Avatar - Ordem Paranormal</h1>
+  <div class="panel">
+    <h1>Avatar — Ordem Paranormal (3D-ish)</h1>
+    <div class="canvas-wrap" id="wrap">
+      <!-- SVG detalhado: múltiplas camadas, gradientes e filtros para profundidade -->
+      <svg id="avatar" viewBox="0 0 300 420" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <defs>
+          <!-- Gradientes -->
+          <radialGradient id="faceGrad" cx="40%" cy="35%" r="70%">
+            <stop offset="0%" stop-color="#4a4a4a"/>
+            <stop offset="60%" stop-color="#2b2b2b"/>
+            <stop offset="100%" stop-color="#171717"/>
+          </radialGradient>
 
-  <!-- Contêiner SVG -->
-  <svg id="avatarSVG" viewBox="0 0 250 350">
-    <!-- Frente -->
-    <g id="view-front">
-      <!-- Capuz -->
-      <path d="M125 60 C85 100, 85 180, 125 200 C165 180, 165 100, 125 60Z" fill="#0d0d0d" stroke="#222" stroke-width="2"/>
-      <!-- Rosto -->
-      <ellipse cx="125" cy="110" rx="22" ry="26" fill="#2e2e2e" />
-      <!-- Olhos -->
-      <ellipse cx="115" cy="110" rx="5" ry="6" fill="#b78aff">
-        <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite"/>
-      </ellipse>
-      <ellipse cx="135" cy="110" rx="5" ry="6" fill="#b78aff">
-        <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite"/>
-      </ellipse>
-      <!-- Corpo -->
-      <rect x="100" y="135" width="50" height="90" rx="10" fill="#1a1a1a" />
-      <!-- Sobretudo -->
-      <path d="M100 135 L90 260 L160 260 L150 135 Z" fill="#101010" />
-      <!-- Símbolo arcano -->
-      <circle cx="125" cy="170" r="10" stroke="#b78aff" stroke-width="2" fill="none">
-        <animateTransform attributeName="transform" type="rotate" from="0 125 170" to="360 125 170" dur="6s" repeatCount="indefinite" />
-      </circle>
-      <line x1="115" y1="170" x2="135" y2="170" stroke="#b78aff" stroke-width="1.5" />
-      <line x1="125" y1="160" x2="125" y2="180" stroke="#b78aff" stroke-width="1.5" />
-      <!-- Pernas -->
-      <rect x="108" y="225" width="10" height="45" fill="#111" />
-      <rect x="132" y="225" width="10" height="45" fill="#111" />
-    </g>
+          <linearGradient id="cloakGrad" x1="0" x2="1">
+            <stop offset="0%" stop-color="#0a0a0a"/>
+            <stop offset="60%" stop-color="#151316"/>
+            <stop offset="100%" stop-color="#0b0b0d"/>
+          </linearGradient>
 
-    <!-- Costas -->
-    <g id="view-back" style="display:none;">
-      <path d="M125 60 C85 100, 85 180, 125 200 C165 180, 165 100, 125 60Z" fill="#0d0d0d" stroke="#222" stroke-width="2"/>
-      <rect x="100" y="135" width="50" height="90" rx="10" fill="#1a1a1a" />
-      <path d="M100 135 L90 260 L160 260 L150 135 Z" fill="#101010" />
-      <rect x="108" y="225" width="10" height="45" fill="#111" />
-      <rect x="132" y="225" width="10" height="45" fill="#111" />
-    </g>
+          <linearGradient id="hairGrad" x1="0" x2="1">
+            <stop offset="0%" stop-color="#111"/>
+            <stop offset="100%" stop-color="#2a2a2a"/>
+          </linearGradient>
 
-    <!-- Lado Esquerdo -->
-    <g id="view-left" style="display:none;">
-      <path d="M130 60 C110 100, 110 180, 130 200 C150 180, 150 100, 130 60Z" fill="#0d0d0d" stroke="#222" stroke-width="2"/>
-      <ellipse cx="130" cy="110" rx="20" ry="26" fill="#2e2e2e" />
-      <ellipse cx="118" cy="110" rx="5" ry="6" fill="#b78aff">
-        <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite"/>
-      </ellipse>
-      <rect x="115" y="135" width="40" height="90" rx="10" fill="#1a1a1a" />
-      <circle cx="130" cy="170" r="9" stroke="#b78aff" stroke-width="2" fill="none" />
-      <rect x="120" y="225" width="10" height="45" fill="#111" />
-    </g>
+          <linearGradient id="metal" x1="0" x2="1">
+            <stop offset="0%" stop-color="#a39ad1"/>
+            <stop offset="100%" stop-color="#6b5d9e"/>
+          </linearGradient>
 
-    <!-- Lado Direito -->
-    <g id="view-right" style="display:none;">
-      <path d="M120 60 C140 100, 140 180, 120 200 C100 180, 100 100, 120 60Z" fill="#0d0d0d" stroke="#222" stroke-width="2"/>
-      <ellipse cx="120" cy="110" rx="20" ry="26" fill="#2e2e2e" />
-      <ellipse cx="132" cy="110" rx="5" ry="6" fill="#b78aff">
-        <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite"/>
-      </ellipse>
-      <rect x="95" y="135" width="40" height="90" rx="10" fill="#1a1a1a" />
-      <circle cx="120" cy="170" r="9" stroke="#b78aff" stroke-width="2" fill="none" />
-      <rect x="110" y="225" width="10" height="45" fill="#111" />
-    </g>
-  </svg>
+          <!-- sombra interna para sensação 3D -->
+          <filter id="innerShadow">
+            <!-- offset the original shape -->
+            <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur"/>
+            <feOffset dx="0" dy="4" result="off"/>
+            <feComposite in="off" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="inset"/>
+            <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6" />
+          </filter>
 
-  <div class="botoes">
-    <button onclick="showView('front')">Frente</button>
-    <button onclick="showView('back')">Costas</button>
-    <button onclick="showView('left')">Esquerda</button>
-    <button onclick="showView('right')">Direita</button>
+          <!-- leve desfoque pra brilho -->
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="6" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+
+          <!-- sombra externa -->
+          <filter id="drop">
+            <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#000" flood-opacity="0.7"/>
+          </filter>
+
+          <!-- textura sutil para tecido (ruído) -->
+          <pattern id="tex" width="6" height="6" patternUnits="userSpaceOnUse">
+            <rect width="6" height="6" fill="#000"/>
+            <path d="M0 3 L6 3" stroke="#080808" stroke-width="0.6"/>
+          </pattern>
+
+        </defs>
+
+        <!-- Fundo suave -->
+        <rect x="0" y="0" width="300" height="420" fill="url(#cloakGrad)" opacity="0.06"/>
+
+        <!-- --- Camadas: pés -> pernas -> corpo -> detalhes -> cabeça -> cabelo -> capuz -> olhos -> símbolo --- -->
+
+        <!-- Sombra do personagem -->
+        <ellipse cx="150" cy="370" rx="60" ry="16" fill="#000" opacity="0.38" filter="url(#glow)"/>
+
+        <!-- Pernas e botas (volume) -->
+        <g id="legs">
+          <path d="M118 278 q-6 38 0 60 q12 8 18 0 q6-8 6-26 q0-14 0-34 z" fill="#0b0b0b" stroke="#111" stroke-width="0.5"/>
+          <path d="M182 278 q6 38 0 60 q-12 8 -18 0 q-6-8 -6-26 q0-14 0-34 z" fill="#0b0b0b" stroke="#111" stroke-width="0.5"/>
+          <!-- brilho nas dobras -->
+          <path d="M122 300 q10 6 22 0" stroke="#121212" stroke-width="1" fill="none" opacity="0.3"/>
+          <path d="M178 300 q-10 6 -22 0" stroke="#121212" stroke-width="1" fill="none" opacity="0.3"/>
+        </g>
+
+        <!-- Sobretudo / casaco -->
+        <g id="cloak" filter="url(#innerShadow)">
+          <path id="cloak-main" d="
+            M eighty
+            M 92 140
+            C 70 190, 72 250, 100 300
+            L 200 300
+            C 228 250, 230 190, 208 140
+            L 188 150
+            C 170 170, 160 190, 150 190
+            C 140 190, 130 170, 112 150
+            Z" fill="url(#cloakGrad)" stroke="#0e0e0f" stroke-width="1.2" />
+
+          <!-- lapela esquerda -->
+          <path d="M100 150 C110 170,125 185,150 185 L 140 160 C128 160,114 150,100 150 Z"
+                fill="#121214" opacity="0.9"/>
+
+          <!-- lapela direita -->
+          <path d="M200 150 C190 170,175 185,150 185 L 160 160 C172 160,186 150,200 150 Z"
+                fill="#111111" opacity="0.92"/>
+
+          <!-- dobra central do sobretudo -->
+          <path d="M150 185 L150 305" stroke="#0b0b0b" stroke-width="2" opacity="0.7"/>
+        </g>
+
+        <!-- Torso interno (camada de roupa) -->
+        <g id="torso">
+          <path d="M120 150 L180 150 L188 250 L112 250 Z" fill="url(#tex)" opacity="0.06"/>
+          <rect x="122" y="150" width="56" height="92" rx="8" fill="#151517" stroke="#0a0a0a" stroke-width="0.6"/>
+          <!-- leves brilhos de tecido -->
+          <path d="M130 160 q18 12 40 0" stroke="#1e1c21" stroke-width="1.2" fill="none" opacity="0.35"/>
+        </g>
+
+        <!-- Símbolo arcano (discreto) com brilho e profundidade -->
+        <g id="sigil" transform="translate(150,205)">
+          <circle cx="0" cy="0" r="18" fill="none" stroke="#b78aff" stroke-width="2.2" opacity="0.95" filter="url(#glow)"/>
+          <path d="M-8 0 L8 0 M0 -8 L0 8" stroke="#b78aff" stroke-width="1.6" stroke-linecap="round"/>
+          <g opacity="0.16"><circle cx="0" cy="0" r="24" fill="#b78aff"/></g>
+        </g>
+
+        <!-- Ombros e volume do peito -->
+        <g id="shoulders">
+          <path d="M100 135 C112 120, 138 120, 150 135 C162 120, 188 120, 200 135 L200 150 L100 150 Z"
+                fill="#0d0d0d" stroke="#111" stroke-width="0.6" />
+        </g>
+
+        <!-- Pescoço -> base da cabeça -->
+        <rect x="136" y="125" width="28" height="20" rx="6" fill="#272525" />
+
+        <!-- Cabeça com volume: face + sombreado -->
+        <g id="head">
+          <!-- face principal (ovóide) com gradiente para dar volume -->
+          <path id="face-shape" d="M150 90
+            C135 92, 122 100, 120 115
+            C118 132, 126 150, 150 150
+            C174 150, 182 132, 180 115
+            C178 100, 165 92, 150 90 Z"
+            fill="url(#faceGrad)" stroke="#171717" stroke-width="0.8"/>
+
+          <!-- nariz (sutil) -->
+          <path d="M150 115 q2 8 -6 12" stroke="#232323" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.8"/>
+
+          <!-- boca sutil: expressão neutra mas viva -->
+          <path d="M140 136 q10 6 20 0" stroke="#1b1b1b" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.85"/>
+
+          <!-- realce na face (lado esquerdo mais iluminado) -->
+          <path d="M130 100 C136 98,144 98,150 102 C156 98,164 98,170 100 C168 104,160 110,150 112 C140 110,132 106,130 100 Z"
+                fill="#ffffff" opacity="0.02"/>
+
+        </g>
+
+        <!-- Cabelo com camadas: frontal, laterais e volume atrás -->
+        <g id="hair" fill="url(#hairGrad)" stroke="#0a0a0a" stroke-width="0.6">
+          <!-- nuca -->
+          <path d="M120 108 C110 125,112 140,130 148 C140 152,160 152,170 148 C188 140,190 122,180 108"
+                fill="#0f0f0f" opacity="0.98"/>
+          <!-- franja -->
+          <path d="M126 96 C132 86,150 82,170 96 C162 88,148 86,132 92 C124 94,126 96,126 96 Z" fill="#141414"/>
+          <!-- brilho no cabelo -->
+          <path d="M128 104 C136 100,150 98,162 104" stroke="#232323" stroke-width="1" fill="none" opacity="0.2"/>
+        </g>
+
+        <!-- Capuz (por cima do cabelo) - camadas para profundidade -->
+        <g id="hood" filter="url(#drop)">
+          <path d="M90 80 C110 30, 190 30, 210 80 C200 82,174 84,150 84 C126 84,100 82,90 80 Z"
+                fill="#070608" stroke="#0b0b0b" stroke-width="1.2"/>
+          <!-- interior do capuz (sombra) -->
+          <path d="M110 84 C126 68,174 68,190 84 C170 86,130 86,110 84 Z"
+                fill="#050505" opacity="0.95"/>
+          <!-- vinco do capuz -->
+          <path d="M150 72 C140 74,160 74,150 72" stroke="#161616" stroke-width="1.2" fill="none" opacity="0.9"/>
+        </g>
+
+        <!-- Olhos com pupila, brilho e pálpebra - muita expressão -->
+        <g id="eyes">
+          <!-- olho esquerdo -->
+          <g transform="translate(135,112)">
+            <ellipse cx="0" cy="0" rx="9" ry="6" fill="#09090a" />
+            <ellipse cx="-1" cy="0" rx="6" ry="3.6" fill="#2b1b3b" />
+            <ellipse cx="-1" cy="0" rx="3.2" ry="1.9" fill="#b78aff" filter="url(#glow)"/>
+            <circle cx="1.5" cy="-1.2" r="1.2" fill="#fff" opacity="0.85"/>
+            <!-- pálpebra leve -->
+            <path d="M-8 -2 Q0 -6 8 -2" fill="#151515" opacity="0.12"/>
+          </g>
+
+          <!-- olho direito -->
+          <g transform="translate(165,112)">
+            <ellipse cx="0" cy="0" rx="9" ry="6" fill="#09090a" />
+            <ellipse cx="1" cy="0" rx="6" ry="3.6" fill="#2b1b3b" />
+            <ellipse cx="1" cy="0" rx="3.2" ry="1.9" fill="#b78aff" filter="url(#glow)"/>
+            <circle cx="-1.5" cy="-1.2" r="1.2" fill="#fff" opacity="0.85"/>
+            <path d="M-8 -2 Q0 -6 8 -2" fill="#151515" opacity="0.12"/>
+          </g>
+        </g>
+
+        <!-- cicatriz / marca sutil para dar caráter -->
+        <path d="M142 120 q4 -6 12 -8" stroke="#1c1c1c" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
+
+        <!-- Pequenos botões e detalhe metálico -->
+        <g id="buttons">
+          <circle cx="150" cy="200" r="3.6" fill="url(#metal)" stroke="#0b0b0b" stroke-width="0.8"/>
+          <circle cx="150" cy="220" r="3.6" fill="url(#metal)" stroke="#0b0b0b" stroke-width="0.8"/>
+        </g>
+
+        <!-- detalhes decorativos no capuz -->
+        <g id="hood-detail" opacity="0.18">
+          <path d="M108 82 C122 74, 178 74, 192 82" stroke="#8b78c7" stroke-width="1.2" fill="none"/>
+        </g>
+
+        <!-- borda para simular volume 3D (sutil) -->
+        <path d="M100 150 C110 172,130 200,150 200 C170 200,190 172,200 150" stroke="#000" stroke-width="4" opacity="0.12" fill="none"/>
+
+      </svg>
+    </div>
+
+    <div class="controls">
+      <div class="row">
+        <button class="small" id="btnFront">Frente</button>
+        <button class="small" id="btnBack">Costas</button>
+        <button class="small" id="btnLeft">Esquerda</button>
+        <button class="small" id="btnRight">Direita</button>
+      </div>
+
+      <div class="row">
+        <label>
+          <span style="font-size:12px; color:#bfb7ff;">Luz</span>
+          <input id="light" type="range" min="-60" max="60" value="0" style="width:140px"/>
+        </label>
+
+        <button id="btnRotate" class="small">Girar (auto)</button>
+        <button id="btnSave" class="small">Salvar PNG</button>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Personagem desenhado em SVG com camadas, gradientes e filtros para simular profundidade. Clique e arraste o SVG para inclinar (drag) e ajuste a luz.
+    </div>
   </div>
 
-  <script>
-    function showView(view) {
-      const views = ['front', 'back', 'left', 'right'];
-      views.forEach(v => {
-        document.getElementById(`view-${v}`).style.display = v === view ? 'block' : 'none';
-      });
+<script>
+  // Referências
+  const svg = document.getElementById('avatar');
+  const wrap = document.getElementById('wrap');
+  const btnFront = document.getElementById('btnFront');
+  const btnBack = document.getElementById('btnBack');
+  const btnLeft = document.getElementById('btnLeft');
+  const btnRight = document.getElementById('btnRight');
+  const inputLight = document.getElementById('light');
+  const btnRotate = document.getElementById('btnRotate');
+  const btnSave = document.getElementById('btnSave');
+
+  // Views: para um personagem mais "real", exibiremos/ajustaremos algumas camadas conforme vista.
+  function showView(view){
+    // por simplicidade: mudamos transformações no grupo principal para simular rotação e alterações sutis de camadas
+    svg.style.transition = "transform 500ms ease";
+    if(view === 'front'){
+      svg.style.transform = "perspective(700px) rotateY(0deg) rotateX(0deg) translateZ(0)";
+      // mostrar elementos front (nada extravagante pois já é frontal)
+      // poderia trocar caminhos para versões de perfil, etc.
+    } else if(view === 'left'){
+      svg.style.transform = "perspective(700px) rotateY(18deg) rotateX(0deg) translateZ(0)";
+    } else if(view === 'right'){
+      svg.style.transform = "perspective(700px) rotateY(-18deg) rotateX(0deg) translateZ(0)";
+    } else if(view === 'back'){
+      // simular costas: girar 180deg e ajustar opacidade dos olhos/símbolo
+      svg.style.transform = "perspective(700px) rotateY(180deg) rotateX(0deg) translateZ(0)";
     }
-  </script>
+  }
+
+  btnFront.onclick = ()=>showView('front');
+  btnLeft.onclick = ()=>showView('left');
+  btnRight.onclick = ()=>showView('right');
+  btnBack.onclick = ()=>showView('back');
+
+  // Ajuste da "luz" — mudamos gradientes e fills para simular.
+  inputLight.addEventListener('input', e=>{
+    const v = parseInt(e.target.value); // -60 .. 60
+    // alteramos os stops do gradiente via DOM
+    // mais simples: ajusta o opacity do destaque e transformação do glow
+    const glow = svg.querySelector('#sigil circle');
+    if(glow) glow.style.filter = `drop-shadow(${v/4}px ${Math.abs(v)/10}px ${Math.abs(v/8)}px rgba(120,80,220,0.6))`;
+    // inclinação leve do rosto para simular direção da luz
+    svg.querySelector('#head').setAttribute('transform', `translate(${v/18}, ${-Math.abs(v)/60})`);
+    svg.querySelector('#hair').setAttribute('transform', `translate(${v/28}, ${-Math.abs(v)/70})`);
+    svg.querySelector('#hood').setAttribute('transform', `translate(${v/30}, ${-Math.abs(v)/80})`);
+  });
+
+  // Arrastar o SVG para inclinar manualmente (mouse + touch)
+  let dragging=false, startX=0, startY=0, rotY=0, rotX=0;
+  wrap.addEventListener('pointerdown', (ev)=>{
+    dragging=true;
+    startX = ev.clientX;
+    startY = ev.clientY;
+    wrap.setPointerCapture(ev.pointerId);
+  });
+  wrap.addEventListener('pointermove',(ev)=>{
+    if(!dragging) return;
+    const dx = ev.clientX - startX;
+    const dy = ev.clientY - startY;
+    rotY = dx / 12;
+    rotX = -dy / 28;
+    svg.style.transform = `perspective(700px) rotateY(${rotY}deg) rotateX(${rotX}deg)`;
+  });
+  wrap.addEventListener('pointerup',(ev)=>{
+    dragging=false;
+    wrap.releasePointerCapture(ev.pointerId);
+  });
+  wrap.addEventListener('pointerleave', ()=> dragging=false);
+
+  // Rotação automática toggle
+  let rotating=false, frame=0, anim;
+  btnRotate.addEventListener('click', ()=>{
+    rotating = !rotating;
+    if(rotating){
+      btnRotate.textContent = "Parar";
+      anim = requestAnimationFrame(auto);
+    } else {
+      btnRotate.textContent = "Girar (auto)";
+      cancelAnimationFrame(anim);
+    }
+  });
+  function auto(){
+    frame += 1;
+    const angle = 10 * Math.sin(frame/40);
+    svg.style.transform = `perspective(700px) rotateY(${angle}deg) rotateX(${Math.sin(frame/80)*3}deg)`;
+    anim = requestAnimationFrame(auto);
+  }
+
+  // Salvar como PNG: converte SVG para canvas e baixa
+  btnSave.addEventListener('click', async ()=>{
+    const serializer = new XMLSerializer();
+    const svgString = serializer.serializeToString(svg);
+    const blob = new Blob([svgString], {type: 'image/svg+xml;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const scale = 2; // aumenta resolução
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext('2d');
+
+      // fundo translúcido com leve gradiente
+      ctx.fillStyle = "#00000000";
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+
+      // baixar
+      const a = document.createElement('a');
+      a.download = 'avatar_ordem_paranormal.png';
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+    };
+    img.onerror = (e)=> { URL.revokeObjectURL(url); alert('Falha ao gerar imagem'); };
+    img.src = url;
+  });
+
+  // Inicial: front
+  showView('front');
+
+</script>
 </body>
 </html>
-
 
